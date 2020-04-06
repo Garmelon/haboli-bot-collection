@@ -1,0 +1,8 @@
+resolver: lts-15.7
+
+packages:
+  - haboli-infobot
+
+extra-deps:
+  - github: Garmelon/haboli
+    commit: ad393a67f67a97c4e74ce038b773c5bcead5ff10

@@ -1,0 +1,30 @@
+name: haboli-infobot
+version: 0.1.0.0
+license: MIT
+author: Garmelon <joscha@plugh.de>
+copyright: 2020 Garmelon
+
+synopsis: A bot that counts connected clients and displays them in its nick
+description: See <https://github.com/Garmelon/haboli-bot-collection/haboli-infobot#readme>
+github: Garmelon/haboli-bot-collection
+
+extra-source-files:
+  - README.md
+
+dependencies:
+  - base >= 4.7 && < 5
+  - haboli
+
+library:
+  source-dirs: src
+
+executables:
+  haboli-infobot:
+    main: Main.hs
+    source-dirs: app
+    ghc-options:
+      - -threaded
+      - -rtsopts
+      - -with-rtsopts=-N
+    dependencies:
+      - haboli-infobot
