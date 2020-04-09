@@ -5,4 +5,4 @@ packages:
 
 extra-deps:
   - github: Garmelon/haboli
-    commit: ad393a67f67a97c4e74ce038b773c5bcead5ff10
+    commit: 86b6134c00d23b0e2e80208079a1975ac0c91f9a

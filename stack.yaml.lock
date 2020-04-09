@@ -5,19 +5,19 @@
 
 packages:
 - completed:
-    size: 14086
-    url: https://github.com/Garmelon/haboli/archive/ad393a67f67a97c4e74ce038b773c5bcead5ff10.tar.gz
+    size: 19510
+    url: https://github.com/Garmelon/haboli/archive/86b6134c00d23b0e2e80208079a1975ac0c91f9a.tar.gz
     cabal-file:
-      size: 1263
-      sha256: b47acf31bb12e802de480983637998761ee56d5e4a2ac0cc251c02f4388cb814
+      size: 1576
+      sha256: d3dea9408d036abe5aa663343b63ffd39cb5fbf14d80773248dab42c607b69b6
     name: haboli
     version: 0.3.1.0
-    sha256: eb0ca0f08fc3c3caaf730c72aaaae31f582cef8dd30b8fc461b11e8e16115166
+    sha256: c137c08d5ccb6c55c6cd3f03b6d50cc073cb885050e4f5815242b11fb2da2307
     pantry-tree:
-      size: 677
-      sha256: fd8200eeae76d312f0bb5799873235c410f7274018903c936f73942441f0ac73
+      size: 1193
+      sha256: 7d7f3fe4fdd753fd6022c1c5f56b30333318130e40b53e0c202f3ea897ff6e79
   original:
-    url: https://github.com/Garmelon/haboli/archive/ad393a67f67a97c4e74ce038b773c5bcead5ff10.tar.gz
+    url: https://github.com/Garmelon/haboli/archive/86b6134c00d23b0e2e80208079a1975ac0c91f9a.tar.gz
 snapshots:
 - completed:
     size: 491389
