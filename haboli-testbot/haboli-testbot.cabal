@@ -1,0 +1,58 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.31.2.
+--
+-- see: https://github.com/sol/hpack
+--
+-- hash: c59191837f2f234376576136c23122cdc5288703e37b782ee1908d225e22dcee
+
+name:           haboli-testbot
+version:        0.1.0.0
+synopsis:       A bot used for testing small things
+description:    See <https://github.com/Garmelon/haboli-bot-collection/haboli-testbot#readme>
+homepage:       https://github.com/Garmelon/haboli-bot-collection#readme
+bug-reports:    https://github.com/Garmelon/haboli-bot-collection/issues
+author:         Garmelon <joscha@plugh.de>
+maintainer:     Garmelon <joscha@plugh.de>
+copyright:      2020 Garmelon
+license:        MIT
+build-type:     Simple
+extra-source-files:
+    README.md
+
+source-repository head
+  type: git
+  location: https://github.com/Garmelon/haboli-bot-collection
+
+library
+  exposed-modules:
+      Haboli.Bots.TestBot
+  other-modules:
+      Paths_haboli_testbot
+  hs-source-dirs:
+      src
+  build-depends:
+      base >=4.7 && <5
+    , containers
+    , haboli
+    , microlens-platform
+    , text
+    , time
+  default-language: Haskell2010
+
+executable haboli-testbot
+  main-is: Main.hs
+  other-modules:
+      Paths_haboli_testbot
+  hs-source-dirs:
+      app
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      base >=4.7 && <5
+    , containers
+    , haboli
+    , haboli-testbot
+    , microlens-platform
+    , text
+    , time
+  default-language: Haskell2010

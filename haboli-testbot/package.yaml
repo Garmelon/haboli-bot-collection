@@ -1,0 +1,34 @@
+name: haboli-testbot
+version: 0.1.0.0
+license: MIT
+author: Garmelon <joscha@plugh.de>
+copyright: 2020 Garmelon
+
+synopsis: A bot used for testing small things
+description: See <https://github.com/Garmelon/haboli-bot-collection/haboli-testbot#readme>
+github: Garmelon/haboli-bot-collection
+
+extra-source-files:
+  - README.md
+
+dependencies:
+  - base >= 4.7 && < 5
+  - containers
+  - haboli
+  - microlens-platform
+  - text
+  - time
+
+library:
+  source-dirs: src
+
+executables:
+  haboli-testbot:
+    main: Main.hs
+    source-dirs: app
+    ghc-options:
+      - -threaded
+      - -rtsopts
+      - -with-rtsopts=-N
+    dependencies:
+      - haboli-testbot

@@ -2,6 +2,7 @@ resolver: lts-15.7
 
 packages:
   - haboli-infobot
+  - haboli-testbot
 
 extra-deps:
   - github: Garmelon/haboli
