@@ -24,10 +24,6 @@ data BotState = BotState
 
 makeLenses ''BotState
 
--- | A small example bot. Takes a room password as its first argument. You can
--- run this bot in [&test](https://euphoria.io/room/test) like this:
---
--- > runClient defaultConfig $ exampleBot Nothing
 infoBot :: Maybe T.Text -> Client T.Text ()
 infoBot mPasswd = do
   startTime <- liftIO getCurrentTime
@@ -37,6 +33,7 @@ infoBot mPasswd = do
   let initialState = BotState startTime $ newListing initialEvents
   stateVar <- liftIO $ newMVar initialState
   preferNickVia botListing stateVar "InfoBot"
+  updateNick stateVar
   botMain stateVar
 
 botMain :: MVar BotState -> Client T.Text ()
@@ -44,6 +41,13 @@ botMain stateVar = forever $ do
   event <- respondingToCommands (getCommands stateVar) $
     respondingToPing nextEvent
   updateFromEventVia botListing stateVar event
+  updateNick stateVar
+
+shortHelp :: T.Text
+shortHelp = "/me counts and displays connected clients in its nick"
+
+longHelp :: T.Text
+longHelp = "Help coming soon. Made by @Garmy."
 
 getCommands :: MVar BotState -> Client e [Command T.Text]
 getCommands stateVar = do
@@ -52,29 +56,39 @@ getCommands stateVar = do
   pure
     [ botrulezPingGeneral
     , botrulezPingSpecific name
-    , botrulezHelpSpecific name
-        "I am an example bot for https://github.com/Garmelon/haboli/."
+    , botrulezPingSpecific "InfoBot"
+
+    , botrulezHelpGeneral shortHelp
+    , botrulezHelpSpecific name longHelp
+    , botrulezHelpSpecific "InfoBot" longHelp
+
     , botrulezUptimeSpecific name $ state ^. botStartTime
+    , botrulezUptimeSpecific "InfoBot" $ state ^. botStartTime
+
     , botrulezKillSpecific name
-    , cmdSpecific "hug" name $ \msg -> void $ reply msg "/me hugs back"
-    , cmdHello
-    , cmdNick stateVar name
-    , cmdWho stateVar
+    , botrulezKillSpecific "InfoBot"
     ]
 
-cmdHello :: Command e
-cmdHello = cmdGeneral "hello" $ \msg -> do
-  let mention = nickMention $ svNick $ msgSender msg
-  void $ reply msg $ "Hi there, @" <> mention <> "!"
+formatNick :: Listing -> T.Text
+formatNick listing =
+  let views = lsSelf listing : Map.elems (lsOthers listing)
+      (bots, people) = partition (\sv -> userType (svId sv) == Bot) views
+      peopleLurkers = filter (T.null . svNick) people
+      botLurkers = filter (T.null . svNick) people
+      p = length people - l
+      b = length bots - n
+      l = length peopleLurkers
+      n = length botLurkers
+      inner = T.intercalate " " $ map T.pack $ concat
+        [ [show p ++ "P" | p > 0]
+        , [show b ++ "B"]
+        , [show l ++ "L" | l > 0]
+        , [show n ++ "N" | n > 0]
+        ]
+  in  "\x0001(" <> inner <> ")"
 
-cmdNick :: MVar BotState -> T.Text -> Command e
-cmdNick stateVar name = cmdSpecificArgs "nick" name $ \msg args -> do
-  preferNickVia botListing stateVar args
-  void $ reply msg "Is this better?"
-
-cmdWho :: MVar BotState -> Command e
-cmdWho stateVar = cmdGeneral "who" $ \msg -> do
+updateNick :: MVar BotState -> Client e ()
+updateNick stateVar = do
   state <- liftIO $ readMVar stateVar
-  let people = state ^. botListing . lsOthersL
-      nicks = sort $ map svNick $ Map.elems people
-  void $ reply msg $ T.intercalate "\n" nicks
+  let newName = formatNick $ state ^. botListing
+  preferNickVia botListing stateVar newName
