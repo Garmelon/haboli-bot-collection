@@ -8,12 +8,15 @@ module Haboli.Bots.TestBot
 import           Control.Concurrent
 import           Control.Monad
 import           Control.Monad.IO.Class
-import qualified Data.Text                as T
+import qualified Data.Text                          as T
 import           Data.Time
 import           Lens.Micro.Platform
+import           Text.Megaparsec
+import           Text.Megaparsec.Char
 
 import           Haboli.Euphoria
 import           Haboli.Euphoria.Botrulez
+import           Haboli.Euphoria.Command.Megaparsec
 
 data BotState = BotState
   { _botStartTime :: UTCTime
@@ -35,7 +38,7 @@ testBot mPasswd = do
 
 botMain :: MVar BotState -> Client T.Text ()
 botMain stateVar = forever $ do
-  event <- respondingToCommands (getCommands stateVar) $
+  event <- respondingToCommand (getCommand stateVar) $
     respondingToPing nextEvent
   updateFromEventVia botListing stateVar event
 
@@ -49,14 +52,21 @@ longHelp = T.concat
   , "Source code available at https://github.com/Garmelon/haboli-bot-collection."
   ]
 
-getCommands :: MVar BotState -> Client e [Command T.Text]
-getCommands stateVar = do
+getCommand :: MVar BotState -> Client e (Command T.Text)
+getCommand stateVar = do
   state <- liftIO $ readMVar stateVar
   let name = state ^. botListing . lsSelfL . svNickL
-  pure
+  pure $ cmdSequential
     [ botrulezPingGeneral
     , botrulezPingSpecific name
     , botrulezHelpSpecific name longHelp
     , botrulezUptimeSpecific name $ state ^. botStartTime
     , botrulezKillSpecific name
+    , cmdEcho name
     ]
+
+cmdEcho :: T.Text -> Command e
+cmdEcho name = cmdMega parser $ \msg text -> void $ reply msg text
+  where
+    parser :: Parsec () T.Text T.Text
+    parser = pNick name *> space1 *> pUntilEof

@@ -15,6 +15,7 @@ dependencies:
   - base >= 4.7 && < 5
   - containers
   - haboli
+  - megaparsec
   - microlens-platform
   - text
   - time

@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: c59191837f2f234376576136c23122cdc5288703e37b782ee1908d225e22dcee
+-- hash: d5c030fa8dd9717353e88856ef71c7e7c92cc984be5d40a99a071c221cf9c1e5
 
 name:           haboli-testbot
 version:        0.1.0.0
@@ -35,6 +35,7 @@ library
       base >=4.7 && <5
     , containers
     , haboli
+    , megaparsec
     , microlens-platform
     , text
     , time
@@ -52,6 +53,7 @@ executable haboli-testbot
     , containers
     , haboli
     , haboli-testbot
+    , megaparsec
     , microlens-platform
     , text
     , time
