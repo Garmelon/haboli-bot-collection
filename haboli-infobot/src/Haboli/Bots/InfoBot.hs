@@ -47,7 +47,19 @@ shortHelp :: T.Text
 shortHelp = "/me counts and displays connected clients in its nick"
 
 longHelp :: T.Text
-longHelp = "Help coming soon. Made by @Garmy."
+longHelp = T.concat
+  [ "This bot counts how many people (P), bots (B), lurkers (L) and bot lurkers"
+  , " (N) are connected to this room and displays the count in its nick."
+  , " "
+  , "In case you can't mention it directly, it also listens to the nick @InfoBot."
+  , "\n"
+  , "!recalibrate\t\tUse this command if the count seems to be off."
+  , "\n"
+  , "\n"
+  , "Made by @Garmy using https://github.com/Garmelon/haboli/."
+  , "\n"
+  , "Source code available at https://github.com/Garmelon/haboli-bot-collection."
+  ]
 
 getCommands :: MVar BotState -> Client e [Command T.Text]
 getCommands stateVar = do
@@ -67,6 +79,8 @@ getCommands stateVar = do
 
     , botrulezKillSpecific name
     , botrulezKillSpecific "InfoBot"
+
+    , cmdRecalibrate stateVar
     ]
 
 formatNick :: Listing -> T.Text
@@ -92,3 +106,10 @@ updateNick stateVar = do
   state <- liftIO $ readMVar stateVar
   let newName = formatNick $ state ^. botListing
   preferNickVia botListing stateVar newName
+
+cmdRecalibrate :: MVar BotState -> Command e
+cmdRecalibrate stateVar = cmdGeneral "recalibrate" $ \msg -> do
+  sessions <- who
+  updateFromListVia botListing stateVar sessions
+  updateNick stateVar
+  void $ reply msg "/me has recalibrated"
